@@ -4,8 +4,10 @@ import { gql, useMutation } from '@apollo/client';
 import { useLocation } from 'react-router-dom';
 
 const KAKAO_AUTH = gql`
-  mutation kakaoAuth($code: String!) {
-    kakaoAuth(code: $code)
+  mutation kakaoAuth($code: CodeInput!) {
+    kakaoAuth(code: $code) {
+      code
+    }
   }
 `;
 
@@ -14,14 +16,21 @@ const Kakao = () => {
   const [code, setCode] = useState<
     string | string[] | qs.ParsedQs | qs.ParsedQs[] | undefined
   >('');
-  const [kakaoAuth, { data }] = useMutation(KAKAO_AUTH, {
-    variables: { code: code },
+  // const [kakaoAuth, { data }] = useMutation(KAKAO_AUTH, {
+  //   variables: { code: code },
+  // });
+
+  const [kakaoAuth] = useMutation(KAKAO_AUTH, {
+    variables: {
+      code: {
+        code,
+      },
+    },
   });
 
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log(location);
-    // console.log(data.kakaoAuth);
   };
 
   useEffect(() => {
@@ -35,7 +44,16 @@ const Kakao = () => {
     setTimeout(() => kakaoAuth(), 1000);
   }, []);
 
-  return <button onClick={onClick}>login</button>;
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <button
+        style={{ width: '300px', marginTop: '30px', marginBottom: '20px' }}
+        onClick={onClick}>
+        login
+      </button>
+      <button style={{ width: '300px' }}>로그아웃</button>
+    </div>
+  );
 };
 
 export default Kakao;
