@@ -1,16 +1,7 @@
 import { gql, useMutation } from '@apollo/client';
-import { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-
-type ContentType = {
-  content: string;
-  id: string;
-  createdAt: string;
-  __typename: string;
-};
-type ContentParams = {
-  setContents: Dispatch<SetStateAction<ContentType[]>>;
-};
+import { FETCH_CONTENTS } from './List';
 
 const CREATE_CONTENT = gql`
   mutation createContent($contentInput: ContentInput) {
@@ -22,7 +13,7 @@ const CREATE_CONTENT = gql`
   }
 `;
 
-const Content = ({ setContents }: ContentParams) => {
+const Content = () => {
   const [text, setText] = useState<string>('');
   const [createContent] = useMutation(CREATE_CONTENT);
 
@@ -31,14 +22,18 @@ const Content = ({ setContents }: ContentParams) => {
   };
 
   const handleContentSubmit = async () => {
-    const data = await createContent({
+    createContent({
       variables: {
         contentInput: {
           content: text,
         },
       },
+      refetchQueries: [
+        {
+          query: FETCH_CONTENTS,
+        },
+      ],
     });
-    setContents((prev) => [...prev, data.data.createContent]);
   };
 
   return (
@@ -65,4 +60,4 @@ const Input = styled.input`
   margin-bottom: 10px;
 `;
 
-export default Content;
+export default React.memo(Content);

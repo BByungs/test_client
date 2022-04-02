@@ -8,10 +8,10 @@ function App(): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/main' element={<Main />} />
-        <Route path='/join' element={<Join />} />
-        <Route path='/auth/kakao' element={<Kakao />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/main" element={<Main />} />
+        <Route path="/join" element={<Join />} />
+        <Route path="/auth/kakao" element={<Kakao />} />
       </Routes>
     </BrowserRouter>
   );

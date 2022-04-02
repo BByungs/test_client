@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import React, { Dispatch, SetStateAction, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import ContentBox from './ContentBox';
 
@@ -10,12 +10,7 @@ type ContentType = {
   __typename: string;
 };
 
-type ListParams = {
-  contents: ContentType[];
-  setContents: Dispatch<SetStateAction<ContentType[]>>;
-};
-
-const FETCH_CONTENTS = gql`
+export const FETCH_CONTENTS = gql`
   query fetchContents {
     fetchContents {
       id
@@ -24,24 +19,16 @@ const FETCH_CONTENTS = gql`
   }
 `;
 
-const List = ({ contents, setContents }: ListParams) => {
-  const { data } = useQuery(FETCH_CONTENTS);
+const List = () => {
+  const { loading, error, data } = useQuery(FETCH_CONTENTS);
 
-  useEffect(() => {
-    if (data && data.fetchContents) {
-      setContents(data.fetchContents);
-    }
-  }, [data, setContents]);
+  if (loading) return <div>Loading ...</div>;
+  if (error) return <div>{`Error! ${error.message}`}</div>;
 
   return (
     <Wrapper>
-      {contents?.map((content: ContentType) => (
-        <ContentBox
-          key={content.id}
-          content={content}
-          contents={contents}
-          setContents={setContents}
-        />
+      {data.fetchContents.map((content: ContentType) => (
+        <ContentBox key={content.id} content={content} />
       ))}
     </Wrapper>
   );

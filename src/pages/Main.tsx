@@ -1,16 +1,8 @@
-import { useState } from 'react';
+import React from 'react';
 import Content from '../components/Content';
 import List from '../components/List';
 
-type ContentType = {
-  content: string;
-  id: string;
-  createdAt: string;
-  __typename: string;
-};
-
 const Main = () => {
-  const [contents, setContents] = useState<ContentType[]>([]);
   return (
     <div
       style={{
@@ -18,11 +10,12 @@ const Main = () => {
         flexDirection: 'column',
         width: '100%',
         alignItems: 'center',
-      }}>
-      <Content setContents={setContents} />
-      <List contents={contents} setContents={setContents} />
+      }}
+    >
+      <Content />
+      <List />
     </div>
   );
 };
 
-export default Main;
+export default React.memo(Main);

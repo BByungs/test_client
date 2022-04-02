@@ -11,7 +11,6 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-//test
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>

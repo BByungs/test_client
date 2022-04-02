@@ -1,6 +1,7 @@
 import { gql, useMutation } from '@apollo/client';
-import { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
+import { FETCH_CONTENTS } from './List';
 
 const UPDATE_CONTENT = gql`
   mutation updateContent($id: ID!, $contentInput: ContentInput) {
@@ -29,11 +30,9 @@ type ContentType = {
 
 type ContentBoxParams = {
   content: ContentType;
-  contents: ContentType[];
-  setContents: React.Dispatch<React.SetStateAction<ContentType[]>>;
 };
 
-const ContentBox = ({ content, contents, setContents }: ContentBoxParams) => {
+const ContentBox = ({ content }: ContentBoxParams) => {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
   const [updateContent] = useMutation(UPDATE_CONTENT);
@@ -43,38 +42,41 @@ const ContentBox = ({ content, contents, setContents }: ContentBoxParams) => {
     setText(e.target.value);
   };
 
-  const handleUpdate = async (id: string, text: string) => {
-    const result = await updateContent({
-      variables: {
-        id,
-        contentInput: {
-          content: text,
+  const handleUpdate = useCallback(
+    async (id: string, text: string) => {
+      updateContent({
+        variables: {
+          id,
+          contentInput: {
+            content: text,
+          },
         },
-      },
-    });
-    const copyContents = [...contents];
-    const deepCopy = copyContents.map((data) => {
-      const copyData = { ...data };
-      if (copyData.id === id) {
-        copyData.content = result.data.updateContent.content;
-      }
-      return copyData;
-    });
-    setContents(deepCopy);
-    setOpen((prev) => !prev);
-  };
+        refetchQueries: [
+          {
+            query: FETCH_CONTENTS,
+          },
+        ],
+      });
+      setOpen((prev) => !prev);
+    },
+    [updateContent]
+  );
 
-  const handleDeleteButton = async (id: String) => {
-    const result = await deleteContent({
-      variables: {
-        id,
-      },
-    });
-    const filterData = contents.filter(
-      (el) => el.id !== result.data.deleteContent.id
-    );
-    setContents(filterData);
-  };
+  const handleDeleteButton = useCallback(
+    async (id: String) => {
+      deleteContent({
+        variables: {
+          id,
+        },
+        refetchQueries: [
+          {
+            query: FETCH_CONTENTS,
+          },
+        ],
+      });
+    },
+    [deleteContent]
+  );
 
   return (
     <>
@@ -131,4 +133,4 @@ const Button = styled.button`
   color: white;
 `;
 
-export default ContentBox;
+export default React.memo(ContentBox);
