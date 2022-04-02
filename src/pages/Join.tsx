@@ -13,7 +13,7 @@ const Row = styled.div`
   display: flex;
 `;
 
-const Join = () => {
+const Join = (): JSX.Element => {
   return (
     <Wrapper>
       <Row>

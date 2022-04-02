@@ -13,7 +13,7 @@ const CREATE_CONTENT = gql`
   }
 `;
 
-const Content = () => {
+const Content = (): JSX.Element => {
   const [text, setText] = useState<string>('');
   const [createContent] = useMutation(CREATE_CONTENT);
 
@@ -21,7 +21,7 @@ const Content = () => {
     setText(e.target.value);
   };
 
-  const handleContentSubmit = async () => {
+  const handleContentSubmit = () => {
     createContent({
       variables: {
         contentInput: {
@@ -60,4 +60,4 @@ const Input = styled.input`
   margin-bottom: 10px;
 `;
 
-export default React.memo(Content);
+export default Content;

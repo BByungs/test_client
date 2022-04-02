@@ -19,7 +19,7 @@ export const FETCH_CONTENTS = gql`
   }
 `;
 
-const List = () => {
+const List = (): JSX.Element => {
   const { loading, error, data } = useQuery(FETCH_CONTENTS);
 
   if (loading) return <div>Loading ...</div>;

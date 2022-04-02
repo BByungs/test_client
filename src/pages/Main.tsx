@@ -1,8 +1,7 @@
-import React from 'react';
 import Content from '../components/Content';
 import List from '../components/List';
 
-const Main = () => {
+const Main = (): JSX.Element => {
   return (
     <div
       style={{
@@ -18,4 +17,4 @@ const Main = () => {
   );
 };
 
-export default React.memo(Main);
+export default Main;

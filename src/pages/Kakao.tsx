@@ -22,24 +22,27 @@ const KAKAO_AUTH = gql`
   }
 `;
 
-const Kakao = () => {
+const Kakao = (): JSX.Element => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [kakaoAuth] = useMutation(KAKAO_AUTH);
+  const [KakaoAuth] = useMutation(KAKAO_AUTH);
 
   const loginOrSignup = useCallback(async () => {
     const { code } = qs.parse(location.search, {
       ignoreQueryPrefix: true,
     });
-    const result = await kakaoAuth({
+    const {
+      data: { kakaoAuth },
+    } = await KakaoAuth({
       variables: {
         code: {
           code,
         },
       },
     });
-    if (result?.data?.kakaoAuth?.joined) {
-      localStorage.setItem('users', JSON.stringify(result));
+    console.log(kakaoAuth);
+    if (kakaoAuth?.joined) {
+      localStorage.setItem('users', JSON.stringify(kakaoAuth));
       navigate('/main');
     } else navigate('/join');
   }, []);
@@ -48,11 +51,7 @@ const Kakao = () => {
     loginOrSignup();
   }, []);
 
-  return (
-    <>
-      <div>로딩중...</div>
-    </>
-  );
+  return <div>로딩중...</div>;
 };
 
 export default Kakao;

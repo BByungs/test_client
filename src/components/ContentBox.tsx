@@ -32,7 +32,7 @@ type ContentBoxParams = {
   content: ContentType;
 };
 
-const ContentBox = ({ content }: ContentBoxParams) => {
+const ContentBox = ({ content }: ContentBoxParams): JSX.Element => {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState('');
   const [updateContent] = useMutation(UPDATE_CONTENT);
