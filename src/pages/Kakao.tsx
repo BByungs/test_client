@@ -27,7 +27,7 @@ const Kakao = () => {
   const navigate = useNavigate();
   const [kakaoAuth] = useMutation(KAKAO_AUTH);
 
-  const loginOrSignin = useCallback(async () => {
+  const loginOrSignup = useCallback(async () => {
     const { code } = qs.parse(location.search, {
       ignoreQueryPrefix: true,
     });
@@ -45,7 +45,7 @@ const Kakao = () => {
   }, []);
 
   useEffect(() => {
-    loginOrSignin();
+    loginOrSignup();
   }, []);
 
   return (
