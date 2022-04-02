@@ -40,7 +40,6 @@ const Kakao = (): JSX.Element => {
         },
       },
     });
-    console.log(kakaoAuth);
     if (kakaoAuth?.joined) {
       localStorage.setItem('users', JSON.stringify(kakaoAuth));
       navigate('/main');
