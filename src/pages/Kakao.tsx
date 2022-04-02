@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
 import qs from 'qs';
+import { useCallback, useEffect } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -24,31 +25,27 @@ const KAKAO_AUTH = gql`
 const Kakao = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [kakaoAuth, { data }] = useMutation(KAKAO_AUTH);
+  const [kakaoAuth] = useMutation(KAKAO_AUTH);
 
-  async function getToken() {
+  const loginOrSignin = useCallback(async () => {
     const { code } = qs.parse(location.search, {
       ignoreQueryPrefix: true,
     });
-    kakaoAuth({
+    const result = await kakaoAuth({
       variables: {
         code: {
           code,
         },
       },
     });
-  }
+    if (result?.data?.kakaoAuth?.joined) {
+      localStorage.setItem('users', JSON.stringify(result));
+      navigate('/main');
+    } else navigate('/join');
+  }, []);
 
   useEffect(() => {
-    getToken();
-    if (data?.kakaoAuth?.joined) {
-      console.log(data.kakaoAuth);
-      localStorage.setItem('users', JSON.stringify(data));
-      navigate('/main');
-    } else {
-      navigate('/join');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    loginOrSignin();
   }, []);
 
   return (
