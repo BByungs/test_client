@@ -28,22 +28,27 @@ const Kakao = (): JSX.Element => {
   const [KakaoAuth] = useMutation(KAKAO_AUTH);
 
   const loginOrSignup = useCallback(async () => {
-    const { code } = qs.parse(location.search, {
-      ignoreQueryPrefix: true,
-    });
-    const {
-      data: { kakaoAuth },
-    } = await KakaoAuth({
-      variables: {
-        code: {
-          code,
+    try {
+      const { code } = qs.parse(location.search, {
+        ignoreQueryPrefix: true,
+      });
+      const {
+        data: { kakaoAuth },
+      } = await KakaoAuth({
+        variables: {
+          code: {
+            code,
+          },
         },
-      },
-    });
-    if (kakaoAuth?.joined) {
-      localStorage.setItem('users', JSON.stringify(kakaoAuth));
-      navigate('/main');
-    } else navigate('/join');
+      });
+      if (kakaoAuth?.joined) {
+        localStorage.setItem('users', JSON.stringify(kakaoAuth));
+        navigate('/main');
+      } else navigate('/join');
+    } catch (err: any) {
+      alert(`${err.message} data from server!`);
+      navigate('/');
+    }
   }, []);
 
   useEffect(() => {
