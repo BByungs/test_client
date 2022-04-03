@@ -1,5 +1,5 @@
 import { gql, useMutation } from '@apollo/client';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FETCH_CONTENTS } from './List';
 
@@ -42,41 +42,35 @@ const ContentBox = ({ content }: ContentBoxParams): JSX.Element => {
     setText(e.target.value);
   };
 
-  const handleUpdate = useCallback(
-    async (id: string, text: string) => {
-      updateContent({
-        variables: {
-          id,
-          contentInput: {
-            content: text,
-          },
+  const handleUpdate = async (id: string, text: string) => {
+    updateContent({
+      variables: {
+        id,
+        contentInput: {
+          content: text,
         },
-        refetchQueries: [
-          {
-            query: FETCH_CONTENTS,
-          },
-        ],
-      });
-      setOpen((prev) => !prev);
-    },
-    [updateContent]
-  );
+      },
+      refetchQueries: [
+        {
+          query: FETCH_CONTENTS,
+        },
+      ],
+    });
+    setOpen((prev) => !prev);
+  };
 
-  const handleDeleteButton = useCallback(
-    async (id: String) => {
-      deleteContent({
-        variables: {
-          id,
+  const handleDeleteButton = async (id: String) => {
+    deleteContent({
+      variables: {
+        id,
+      },
+      refetchQueries: [
+        {
+          query: FETCH_CONTENTS,
         },
-        refetchQueries: [
-          {
-            query: FETCH_CONTENTS,
-          },
-        ],
-      });
-    },
-    [deleteContent]
-  );
+      ],
+    });
+  };
 
   return (
     <>
